@@ -50,7 +50,7 @@ public class HttpServer {
             if (uriString.startsWith("/moviesearch")){
                 outputLine = getMovie(uriString);
             } else {
-                outputLine = getIndexResponse();
+                outputLine = getIndexPage();
             }
             out.println(outputLine);
             out.close();
@@ -103,6 +103,28 @@ public class HttpServer {
         }
         response += "</table>";
         return response;
+    }
+
+    public static String getIndexPage() {
+        File file = new File("target/classes/resources/index.html");
+        System.out.println("Archivo encontrado");
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            System.out.println("Archivo encontrado");
+            String line;
+            String response = "HTTP/1.1 200 OK\r\n"
+                                + "Content-Type: text/html\r\n"
+                                + "\r\n";
+            while((line = br.readLine()) != null){
+                response += line + "\r\n";
+                System.out.println(response);
+            }
+            br.close();
+            return response;
+        }catch(Exception e){
+            System.out.println("Error");
+            return "Error";
+        }
     }
 
     public static String getIndexResponse(){

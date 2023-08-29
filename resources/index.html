@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirection Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Inicio Servidor Web</h1>
+    <p>Ingresa el nombre del archivo sin usar extensiones y presiona el botón para redireccionar.</p>
+    
+    <input type="text" id="filenameInput" placeholder="Nombre de archivo">
+    <button id="redirectButton">Redireccionar</button>
+
+    <script>
+        document.getElementById("redirectButton").addEventListener("click", function() {
+            var filename = document.getElementById("filenameInput").value;
+            if (filename) {
+                window.location.href = filename;
+                setTimeout(function() {
+                    location.reload();
+                }, 100);
+            } else {
+                alert("Por favor ingresa un nombre de archivo.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,11 +1,13 @@
-# AREP-Taller-1
-En este taller se tuvo como objetivo realizar una aplicación para consultar películas de cine, en la cual se establece una conexión a una API externa que contiene toda la información que se requiere mostrar.
+# AREP-Taller-2
+En este taller se tuvo como objetivo realizar un servidor web que respondiera a las peticiones con archivos .html que contengan codigo CSS o JavaScript, tambien devuelve la informacion de las imagenes solicitadas.
+
+Este taller es una continuacion del primero [AREP Taller 1](https://github.com/JuanPabloDaza/AREP-Taller-1).
 
 ## Para ejecutar el programa
 
 Se puede hacer uso del comando git clone y usar la URL del repositorio:
 ```
-https://github.com/JuanPabloDaza/AREP-Taller-1
+https://github.com/JuanPabloDaza/AREP-Taller-2
 ```
 
 ## Prerequisitos
@@ -21,15 +23,6 @@ mvn package
 ```
 
 Este comando compilara el programa y tambien ejecutara las pruebas. 
-
-## Ejecutar pruebas
-
-Si se quiere ejecutar solamente las pruebas se puede hacer uso del comando:
-
-```
-mvn test
-```
-Las pruebas verifican el funcionamiento del cache y de la conexion del programa a la API externa.
 
 ## Despliegue del programa:
 
@@ -47,15 +40,42 @@ Una vez ejecutado se debe acceder a traves de un buscador y con la direccion:
 
 ### Diseño:
 
-En este programa se usa la clase HttpServer para responder las solicitudes REST que sean necesarias, dentro de la pagina principal hay un buscador que permite ingresar el nombre de la pelicula para que se busque la misma.
+En este programa se usa la clase HttpServer para responder las solicitudes REST que sean necesarias, dentro de la pagina principal hay un buscador que permite ingresar el nombre del archivo que se quiere mostrar.
 
-Para la busqueda de la información primero se verifica que no este en el cache, el cache utiliza el modelo LRU (Least Recently Used), que consiste en ir eliminando las busquedas que menos se realicen con la finalidad de mejorar el tiempo de respuesta.
+Los archivos deben ser almacenados en la carpeta resources.
 
-Si la información no esta en el cache entonces se usa la clase APIConnection para establecer una conexión a la API externa y luego transformar la información solicitada en una tabla que la muestre al usuario.
+De base el programa contiene tres archivos de prueba:
+* index.html
+* imagen.html
+* css.html
+
+#### index.html:
+Permite la busqueda de archivos que esten en la carpeta resources
+
+#### image.html:
+Permite ver la funcionalidad al mostrar una imagen.
+
+#### css.html:
+Permite ver la funcionalidad al mostrar un archivo html con el codigo CSS dentro del mismo.
 
 ### Expansion:
 
-Para expandir la aplicacion se puede lograr por medio de la URI de la petición REST, se puede realizar otra página que utilice otra API y que dependiendo de como este construida la URI se utilice cada un metodo para cada API.
+Para expandir la aplicacion se puede lograr introduciendo los archivos que se quieran mostrar en la carpeta resources. Al ser archivos html se recomienda incluir el siguiente codigo dentro del body del archivo html para volver a index.html y comprabar mas funcionalidades:
+
+```
+    <button id="redirectButton">Redireccionar al inicio</button>
+    <br>
+    <script>
+        document.getElementById("redirectButton").addEventListener("click", function() {
+            window.location.href = "index.html";
+            setTimeout(function() {
+                    location.reload();
+                }, 100);
+        });
+    </script>
+```
+
+El anterior codigo agrega un botón y el script para volver a index.html.
 
 ## Construido con:
 

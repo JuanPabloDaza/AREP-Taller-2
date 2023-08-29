@@ -1,5 +1,8 @@
 package edu.escuelaing.arep.ASE.app;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.*;
 import java.util.*;
 
@@ -49,8 +52,8 @@ public class HttpServer {
             }
             if (uriString.startsWith("/moviesearch")){
                 outputLine = getMovie(uriString);
-            } else {
-                outputLine = getIndexPage();
+            }else{
+                outputLine = getIndexPage(uriString);
             }
             out.println(outputLine);
             out.close();
@@ -59,7 +62,7 @@ public class HttpServer {
         }
         serverSocket.close();
     }
-
+    
     public static String getMovie(String uri) throws IOException{
         String response = "";
         String titulo = uri.split("=")[1];
@@ -105,25 +108,49 @@ public class HttpServer {
         return response;
     }
 
-    public static String getIndexPage() {
-        File file = new File("target/classes/resources/index.html");
-        System.out.println("Archivo encontrado");
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            System.out.println("Archivo encontrado");
+    public static String getIndexPage(String uriString) {
+        StringBuilder response = new StringBuilder();
+        response.append("HTTP/1.1 200 OK\r\n");
+        response.append("Content-Type: text/html\r\n");
+        response.append("\r\n");
+        String path;
+        if(uriString.equals("/") || uriString.equals("/favicon.ico")){
+            path = "AREP-Taller-2/resources/index.html";
+        }else{
+            path = "AREP-Taller-2/resources" + uriString;
+        }
+        try(BufferedReader reader = new BufferedReader(new FileReader(path))){
             String line;
-            String response = "HTTP/1.1 200 OK\r\n"
-                                + "Content-Type: text/html\r\n"
-                                + "\r\n";
-            while((line = br.readLine()) != null){
-                response += line + "\r\n";
-                System.out.println(response);
+            while((line = reader.readLine()) != null){
+                if(line.contains("<img")){
+                    line = line.trim();
+                    String imagePath = line.split(" ")[1];
+                    imagePath = imagePath.split("=")[1];
+                    imagePath = imagePath.substring(1, imagePath.length()-1);
+                    System.out.println(imagePath);
+                    System.out.println(imagePath.split("\\.")[0]);
+                    System.out.println(imagePath.split("\\.")[1]);
+
+                    response.append("<img src=\"data:image/" + imagePath.split("\\.")[1] + ";base64,").append(getImageBits(imagePath)).append("\"/>\n");
+                }else{
+                    response.append(line).append("\n");
+                }
             }
-            br.close();
-            return response;
-        }catch(Exception e){
-            System.out.println("Error");
-            return "Error";
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return response.toString();
+        
+    }
+
+    public static String getImageBits(String imagePath){
+        try{
+            byte[] imageBytes = Files.readAllBytes(Paths.get("AREP-Taller-2/resources/" + imagePath));
+            String image = Base64.getEncoder().encodeToString(imageBytes);
+            return image;
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
         }
     }
 

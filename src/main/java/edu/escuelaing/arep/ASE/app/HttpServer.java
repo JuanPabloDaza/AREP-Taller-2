@@ -115,9 +115,9 @@ public class HttpServer {
         response.append("\r\n");
         String path;
         if(uriString.equals("/") || uriString.equals("/favicon.ico")){
-            path = "AREP-Taller-2/resources/index.html";
+            path = "resources/index.html";
         }else{
-            path = "AREP-Taller-2/resources" + uriString;
+            path = "resources" + uriString;
         }
         try(BufferedReader reader = new BufferedReader(new FileReader(path))){
             String line;
@@ -145,7 +145,7 @@ public class HttpServer {
 
     public static String getImageBits(String imagePath){
         try{
-            byte[] imageBytes = Files.readAllBytes(Paths.get("AREP-Taller-2/resources/" + imagePath));
+            byte[] imageBytes = Files.readAllBytes(Paths.get("resources/" + imagePath));
             String image = Base64.getEncoder().encodeToString(imageBytes);
             return image;
         }catch(IOException e){
